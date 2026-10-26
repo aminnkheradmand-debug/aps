@@ -67,7 +67,7 @@ class PenHoverBridge(private val webView: WebView) {
                 put("y", y.toDouble())
                 put("pressure", e.pressure.toDouble())
                 put("tiltX", e.getAxisValue(MotionEvent.AXIS_TILT).toDouble())
-                put("tiltY", 0.0) // فقط AXIS_TILT موجود است
+                put("tiltY", 0.0)
                 put("t", e.eventTime)
             }
             val js = "window.__ASPPEN_CFG=" + cfgPad + ";" +
