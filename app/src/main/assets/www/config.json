@@ -1,0 +1,89 @@
+{
+  "schema": "aps-web2apk-v4.5",
+  "appName": "demo them",
+  "packageName": "com.example.webapp",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minSdk": 24,
+  "targetSdk": 36,
+  "compileSdk": 36,
+  "sourceType": "file",
+  "entryUrl": "https://appassets.androidplatform.net/assets/www/index.html",
+  "remoteUrl": "",
+  "display": {
+    "orientation": "portrait",
+    "showStatusBar": true,
+    "showActionBar": false,
+    "keepScreenOn": false,
+    "showCameraCutout": true,
+    "desktopMode": false,
+    "showWatermark": false,
+    "watermarkText": "",
+    "primaryColor": "#0F766E",
+    "pageLoadingBgColor": "#0C1017"
+  },
+  "permissions": {
+    "internet": true,
+    "networkState": true,
+    "storage": true,
+    "media": true,
+    "camera": true,
+    "location": true,
+    "notifications": true,
+    "exactAlarms": true,
+    "activityRecognition": false,
+    "vibration": false,
+    "phoneState": true
+  },
+  "splash": {
+    "enabled": true,
+    "backgroundColor": "#0C1017",
+    "loaderStyle": "circle",
+    "loaderColor": "#14B8A6",
+    "iconSizeDp": 96,
+    "iconCornersDp": 22,
+    "loaderSizeDp": 36,
+    "spacingDp": 24,
+    "displayDurationMs": 1800,
+    "loaderThicknessDp": 4,
+    "fadeDurationMs": 350
+  },
+  "webview": {
+    "pullToRefresh": true,
+    "noInternetDialog": true,
+    "loadingIndicator": true,
+    "backButtonNavigation": true,
+    "exitConfirmDialog": true,
+    "javaScriptEnabled": true,
+    "domStorageEnabled": true,
+    "allowFileAccess": true,
+    "allowContentAccess": true,
+    "universalFileAccess": true,
+    "fileAccessFromFileUrls": true,
+    "builtInZoomControls": true,
+    "useWideViewport": true,
+    "loadWithOverviewMode": true,
+    "geolocationEnabled": true,
+    "cacheMode": "LOAD_DEFAULT",
+    "mixedContentMode": "MIXED_CONTENT_COMPATIBILITY_MODE"
+  },
+  "admob": {
+    "enabled": false,
+    "appId": "",
+    "bannerUnitId": "",
+    "bannerPosition": "bottom",
+    "interstitialUnitId": ""
+  },
+  "spen": {
+    "enabled": true,
+    "dispatchPointerEvents": true,
+    "dispatchCustomEvent": true,
+    "hoverHaptics": true,
+    "hoverThrottleMs": 16
+  },
+  "handwriting": {
+    "enabled": true,
+    "engine": "auto",
+    "floatingButton": true
+  }
+}
