@@ -11,6 +11,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.common.model.RemoteModelManager
+import com.google.mlkit.vision.digitalink.DigitalInkRecognition
 import com.google.mlkit.vision.digitalink.DigitalInkRecognitionModel
 import com.google.mlkit.vision.digitalink.DigitalInkRecognitionModelIdentifier
 import com.google.mlkit.vision.digitalink.DigitalInkRecognizer
@@ -23,9 +24,12 @@ class HandwritingBridge(private val webView: WebView) {
         val identifier = DigitalInkRecognitionModelIdentifier.fromLanguageTag("en")!!
         DigitalInkRecognitionModel.builder(identifier).build()
     }
+    
+    // اصلاح شد: استفاده از DigitalInkRecognition به جای DigitalInkRecognizer
     private val recognizer: DigitalInkRecognizer by lazy {
-        DigitalInkRecognizer.getClient(DigitalInkRecognizerOptions.builder(model).build())
+        DigitalInkRecognition.getClient(DigitalInkRecognizerOptions.builder(model).build())
     }
+    
     private var mlKitReady = false
 
     init {
@@ -63,8 +67,8 @@ class HandwritingBridge(private val webView: WebView) {
                 for (p in 0 until points.length()) {
                     val pt = points.optJSONObject(p) ?: continue
                     sb.addPoint(Ink.Point.create(
-                        pt.optDouble("x").toFloat(), // اصلاح شد به Float
-                        pt.optDouble("y").toFloat(), // اصلاح شد به Float
+                        pt.optDouble("x").toFloat(),
+                        pt.optDouble("y").toFloat(),
                         pt.optLong("t")
                     ))
                 }
