@@ -5,17 +5,9 @@ import android.hardware.input.InputManager
 import android.view.HapticFeedbackConstants
 import android.view.InputDevice
 import android.view.MotionEvent
-import android.view.View
 import android.webkit.WebView
 import org.json.JSONObject
 
-/**
- * PenHoverBridge — forwards S Pen / stylus ACTION_HOVER_* generic-motion events
- * into the loaded page through the asp-pen.js shim (window.__aspPenDispatch):
- * synthetic W3C Pointer Events with pointerType "pen" plus the "asp-pen-hover"
- * custom event. Feature-detected at runtime: devices without a stylus digitizer
- * are ignored silently, so the same APK runs everywhere.
- */
 class PenHoverBridge(private val webView: WebView) {
 
     var enabled = true
@@ -24,7 +16,7 @@ class PenHoverBridge(private val webView: WebView) {
     var hoverHaptics = false
     var throttleMs = 16L
 
-    private var stylusAvailable: Int = -1   /* -1 unknown, 0 no, 1 yes */
+    private var stylusAvailable: Int = -1
     private var lastSent = 0L
     private val loc = IntArray(2)
 
@@ -35,10 +27,7 @@ class PenHoverBridge(private val webView: WebView) {
             val im = webView.context.getSystemService(Context.INPUT_SERVICE) as InputManager
             for (id in im.inputDeviceIds) {
                 val dev = im.getInputDevice(id) ?: continue
-                if (dev.supportsSource(InputDevice.SOURCE_STYLUS) ||
-                    dev.supportsSource(InputDevice.SOURCE_TOUCHSCREEN)) {
-                    if (dev.supportsSource(InputDevice.SOURCE_STYLUS)) found = true
-                }
+                if (dev.supportsSource(InputDevice.SOURCE_STYLUS)) found = true
             }
         } catch (_: Exception) {}
         stylusAvailable = if (found) 1 else 0
@@ -77,8 +66,8 @@ class PenHoverBridge(private val webView: WebView) {
                 put("x", x.toDouble())
                 put("y", y.toDouble())
                 put("pressure", e.pressure.toDouble())
-                put("tiltX", e.getAxisValue(MotionEvent.AXIS_TILT_X).toDouble())
-                put("tiltY", e.getAxisValue(MotionEvent.AXIS_TILT_Y).toDouble())
+                put("tiltX", e.getAxisValue(MotionEvent.AXIS_TILT).toDouble())
+                put("tiltY", 0.0) // فقط AXIS_TILT موجود است
                 put("t", e.eventTime)
             }
             val js = "window.__ASPPEN_CFG=" + cfgPad + ";" +
