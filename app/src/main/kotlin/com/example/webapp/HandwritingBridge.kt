@@ -9,18 +9,19 @@ import android.webkit.WebView
 import android.widget.EditText
 import org.json.JSONArray
 import org.json.JSONObject
-import com.google.mlkit.vision.digitalink.DigitalInkRecognizer
-import com.google.mlkit.vision.digitalink.DigitalInkRecognizerOptions
+import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.vision.digitalink.DigitalInkRecognitionModel
 import com.google.mlkit.vision.digitalink.DigitalInkRecognitionModelIdentifier
-import com.google.mlkit.vision.digitalink.DownloadConditions
+import com.google.mlkit.vision.digitalink.DigitalInkRecognizer
+import com.google.mlkit.vision.digitalink.DigitalInkRecognizerOptions
 import com.google.mlkit.vision.digitalink.Ink
-import com.google.mlkit.vision.digitalink.RemoteModelManager
 
 class HandwritingBridge(private val webView: WebView) {
 
     private val model: DigitalInkRecognitionModel by lazy {
-        DigitalInkRecognitionModel.builder(DigitalInkRecognitionModelIdentifier.LATIN).build()
+        val identifier = DigitalInkRecognitionModelIdentifier.fromLanguageTag("en")!!
+        DigitalInkRecognitionModel.builder(identifier).build()
     }
     private val recognizer: DigitalInkRecognizer by lazy {
         DigitalInkRecognizer.getClient(DigitalInkRecognizerOptions.builder(model).build())
@@ -62,8 +63,8 @@ class HandwritingBridge(private val webView: WebView) {
                 for (p in 0 until points.length()) {
                     val pt = points.optJSONObject(p) ?: continue
                     sb.addPoint(Ink.Point.create(
-                        pt.optDouble("x").toFloat(),
-                        pt.optDouble("y").toFloat(),
+                        pt.optDouble("x").toFloat(), // اصلاح شد به Float
+                        pt.optDouble("y").toFloat(), // اصلاح شد به Float
                         pt.optLong("t")
                     ))
                 }
