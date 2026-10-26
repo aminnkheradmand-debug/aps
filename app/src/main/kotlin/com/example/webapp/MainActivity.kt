@@ -292,7 +292,7 @@ class MainActivity : ComponentActivity() {
             allowFileAccessFromFileURLs = wvCfg.optBoolean("fileAccessFromFileUrls", true)
             builtInZoomControls = wvCfg.optBoolean("builtInZoomControls", false)
             displayZoomControls = false
-            useWideViewport = wvCfg.optBoolean("useWideViewport", true)
+            useWideViewPort = wvCfg.optBoolean("useWideViewPort", true)
             loadWithOverviewMode = wvCfg.optBoolean("loadWithOverviewMode", true)
             setGeolocationEnabled(wvCfg.optBoolean("geolocationEnabled", false))
             mediaPlaybackRequiresUserGesture = false
