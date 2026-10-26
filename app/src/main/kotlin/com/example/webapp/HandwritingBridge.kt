@@ -17,11 +17,6 @@ import com.google.mlkit.vision.digitalink.DownloadConditions
 import com.google.mlkit.vision.digitalink.Ink
 import com.google.mlkit.vision.digitalink.RemoteModelManager
 
-/**
- * HandwritingBridge — strokes-to-text for web content via window.ASPHandwriting.
- * Engine "auto/mlkit": ML Kit Digital Ink Recognition (on-device; the model downloads ONCE and works offline afterwards), with the system IME (Samsung Keyboard handwriting) as fallback.
- * Results flow back through window.__aspHandwritingResolve(reqId, ok, text).
- */
 class HandwritingBridge(private val webView: WebView) {
 
     private val model: DigitalInkRecognitionModel by lazy {
@@ -66,7 +61,11 @@ class HandwritingBridge(private val webView: WebView) {
                 val sb = Ink.Stroke.builder()
                 for (p in 0 until points.length()) {
                     val pt = points.optJSONObject(p) ?: continue
-                    sb.addPoint(Ink.Point.create(pt.optDouble("x"), pt.optDouble("y"), pt.optLong("t")))
+                    sb.addPoint(Ink.Point.create(
+                        pt.optDouble("x").toFloat(),
+                        pt.optDouble("y").toFloat(),
+                        pt.optLong("t")
+                    ))
                 }
                 inkBuilder.addStroke(sb.build())
             }
@@ -76,7 +75,6 @@ class HandwritingBridge(private val webView: WebView) {
 
     @JavascriptInterface
     fun recognizeRequest(reqId: String, strokesJson: String) {
-        /* strokesJson carries the full Ink document: {"strokes":[{"points":[{x,y,t}]}]} */
         val ink = inkFromJson(strokesJson) ?: run { finish(reqId, false, "BAD_INK_JSON"); return }
         ensureModel { ok ->
             if (!ok) { imeFallback(reqId); return@ensureModel }
@@ -122,11 +120,11 @@ class HandwritingBridge(private val webView: WebView) {
     }
 
     private fun finish(reqId: String, ok: Boolean, value: String) {
-        val esc = JSONObject().put("v", value).toString()
+        val esc = JSONObject.quote(value)
         webView.post {
             webView.evaluateJavascript(
                 "window.__aspHandwritingResolve&&window.__aspHandwritingResolve(" +
-                JSON.quote(reqId) + "," + (if (ok) "true" else "false") + "," + esc.substring(esc.indexOf(':') + 1, esc.length - 1) + ");",
+                JSONObject.quote(reqId) + "," + (if (ok) "true" else "false") + "," + esc + ");",
                 null
             )
         }
