@@ -6,8 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
-/* Optional release signing — fill keystore.properties (see keystore.properties.example)
-   or let APS sign APKs directly in the browser (WKS_/WSIGN_). */
 val keystorePropsFile = rootProject.file("keystore.properties")
 val keystoreProps = Properties().apply {
     if (keystorePropsFile.exists()) {
@@ -72,8 +70,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.swiperefreshlayout)
-    // implementation(libs.play.services.ads)  // enable with AdMob
-    implementation(libs.mlkit.digital.ink)  // Handwriting → ML Kit (on-device, one-time model download)
+    
+    // این خط دقیقاً همون چیزیه که لازمه
+    implementation("com.google.mlkit:digital-ink-recognition:18.1.0")
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
