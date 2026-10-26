@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,8 +9,10 @@ plugins {
 /* Optional release signing — fill keystore.properties (see keystore.properties.example)
    or let APS sign APKs directly in the browser (WKS_/WSIGN_). */
 val keystorePropsFile = rootProject.file("keystore.properties")
-val keystoreProps = java.util.Properties().apply {
-    if (keystorePropsFile.exists()) keystorePropsFile.inputStream().use { load(it) }
+val keystoreProps = Properties().apply {
+    if (keystorePropsFile.exists()) {
+        FileInputStream(keystorePropsFile).use { load(it) }
+    }
 }
 
 android {
@@ -22,17 +27,23 @@ android {
         versionName = "1.0.0"
     }
 
+    signingConfigs {
+        if (keystorePropsFile.exists()) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile", "release.keystore"))
+                storePassword = keystoreProps.getProperty("storePassword", "")
+                keyAlias = keystoreProps.getProperty("keyAlias", "")
+                keyPassword = keystoreProps.getProperty("keyPassword", "")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             if (keystorePropsFile.exists()) {
-                signingConfig = signingConfigs.create("release") {
-                    storeFile = rootProject.file(keystoreProps.getProperty("storeFile", "release.keystore"))
-                    storePassword = keystoreProps.getProperty("storePassword", "")
-                    keyAlias = keystoreProps.getProperty("keyAlias", "")
-                    keyPassword = keystoreProps.getProperty("keyPassword", "")
-                }
+                signingConfig = signingConfigs.getByName("release")
             }
         }
     }
@@ -41,11 +52,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlin {
         compilerOptions {
             jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
         }
     }
+
     buildFeatures {
         viewBinding = true
     }
