@@ -78,7 +78,7 @@
     "enabled": true,
     "dispatchPointerEvents": true,
     "dispatchCustomEvent": true,
-    "hoverHaptics": true,
+    "hoverHaptics": false,
     "hoverThrottleMs": 16
   },
   "handwriting": {
