@@ -186,7 +186,9 @@ class MainActivity : ComponentActivity() {
             dispatchCustomEvent = spenCfg.optBoolean("dispatchCustomEvent", true)
             hoverHaptics = spenCfg.optBoolean("hoverHaptics", false)
             throttleMs = spenCfg.optLong("hoverThrottleMs", 16L).coerceIn(0L, 500L)
+            debugLog = true
         }
+        penHover.installOnWebView()
         setupBackNavigation(wvCfg)
         loadInitialContent(wvCfg)
     }
@@ -529,14 +531,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onGenericMotionEvent(event: MotionEvent): Boolean {
-        val spenCfg = cfg.optJSONObject("spen") ?: JSONObject()
-        if (spenCfg.optBoolean("enabled", true) && this::penHover.isInitialized) {
-            if (penHover.onGenericMotionEvent(event)) return true
+    override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean {
+        if (this::penHover.isInitialized) {
+            try { penHover.dispatchGenericMotionEvent(ev) } catch (_: Exception) {}
         }
-        return super.onGenericMotionEvent(event)
+        return super.dispatchGenericMotionEvent(ev)
     }
 
+    override fun onGenericMotionEvent(event: MotionEvent): Boolean {
+        return super.onGenericMotionEvent(event)
+    }
     private fun readAssetText(path: String): String? {
         return try {
             assets.open(path).bufferedReader().use { it.readText() }
